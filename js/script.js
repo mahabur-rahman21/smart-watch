@@ -49,56 +49,64 @@ for (const btn of quantityButton) {
   });
 }
 
-
-
 let cartCount = 0;
 let cartItems = [];
 
 document.getElementById("add-to-cart").addEventListener("click", function () {
   const quantity = parseInt(document.getElementById("quantity").innerText);
-  const selectedColorButton =  document.querySelector(".border-purple-600.w-6")
-  const selectedSizeButton =  document.querySelector(".border-purple-600:not(.w-6)")
-  
-  if (selectedColorButton != null  && quantity >0 && selectedSizeButton != null) {
-    document.getElementById("checkout-container").classList.remove("hidden")
-    cartCount=cartCount+quantity
-    document.getElementById("cart-count").innerText=cartCount
+  const selectedColorButton = document.querySelector(".border-purple-600.w-6");
+  const selectedSizeButton = document.querySelector(
+    ".border-purple-600:not(.w-6)"
+  );
 
-    const selectedColor=selectedColorButton.id.split("-")[0]
-    const selectedSize= selectedSizeButton.innerText.split(" ")[0]
-    const selectedPrice= selectedSizeButton.innerText.split(" ")[1].split("$")[1]
+  if (
+    selectedColorButton != null &&
+    quantity > 0 &&
+    selectedSizeButton != null
+  ) {
+    document.getElementById("checkout-container").classList.remove("hidden");
+    cartCount = cartCount + quantity;
+    document.getElementById("cart-count").innerText = cartCount;
+
+    const selectedColor = selectedColorButton.id.split("-")[0];
+    const selectedSize = selectedSizeButton.innerText.split(" ")[0];
+    const selectedPrice = selectedSizeButton.innerText
+      .split(" ")[1]
+      .split("$")[1];
 
     cartItems.push({
-      image:selectedColor+".png",
-      title:"Classy Modern Smart Watch",
+      image: selectedColor + ".png",
+      title: "Classy Modern Smart Watch",
       color: selectedColor,
       size: selectedSize,
       quantity: quantity,
-      price: quantity*parseInt(selectedPrice)
-    }) 
- 
-  }else{
-    alert("please Select item")
+      price: quantity * parseInt(selectedPrice),
+    });
+  } else {
+    alert("please Select item");
   }
-  
 });
 
+document.getElementById("checkout-btn").addEventListener("click", function () {
+  const cartModal = document.getElementById("cart-modal");
+  const cartItem = document.getElementById("cart-items");
 
-
-document.getElementById("checkout-btn").addEventListener("click", function(){
-  const cartModal=document.getElementById("cart-modal")
-  const cartItem=document.getElementById("cart-items")
+  cartItem.innerHTML=``
+  let totalQuantity = 0;
+  let totalPrice = 0;
 
   for (let i = 0; i < cartItems.length; i++) {
     const item = cartItems[i];
 
-   const row=document.createElement("tr")
+    totalQuantity = totalQuantity + item.quantity;
+    totalPrice = totalPrice + item.price;
 
+    const row = document.createElement("tr");
 
-   row.classList.add("border-b")
+    row.classList.add("border-b");
+    row.classList.add("border-gray-300");
 
-
-   row.innerHTML=`
+    row.innerHTML = `
    <td class="py-2 px-4">
       <div class="flex items-center space-x-2">
         <img class="h-12 w-12 object-cover rounded-md" src="${productImageBase}${item.image}" alt="">
@@ -109,28 +117,31 @@ document.getElementById("checkout-btn").addEventListener("click", function(){
     <td class="py-2 px-4">${item.size}</td>
     <td class="py-2 px-4">${item.quantity}</td>
     <td class="py-2 px-4">$${item.price}</td>
-   `
+   `;
 
-   cartItem.appendChild(row)
-
-
-    
+    cartItem.appendChild(row);
   }
 
-  cartModal.classList.remove("hidden")
+  const newTr = document.createElement("tr");
 
-  
-})
+  newTr.innerHTML = `
+  <td class="py-2 px-4 font-bold">Total</td>
+  <td class="py-2 px-4 font-bold"></td>
+  <td class="py-2 px-4 font-bold"></td>
+  <td class="py-2 px-4 font-bold">${totalQuantity}</td>
+  <td class="py-2 px-4 font-bold">$${totalPrice}</td>
+  `;
+  cartItem.appendChild(newTr);
 
+  cartModal.classList.remove("hidden");
 
+});
 
 document
   .getElementById("continue-shopping")
   .addEventListener("click", function () {
     document.getElementById("cart-modal").classList.add("hidden");
   });
-document
-  .getElementById("checkout")
-  .addEventListener("click", function () {
-    window.location.href="https://t.me/soikot2"
-  });
+document.getElementById("checkout").addEventListener("click", function () {
+  window.location.href = "https://t.me/soikot2";
+});
